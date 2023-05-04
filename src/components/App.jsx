@@ -1,6 +1,6 @@
 import css from './App.module.css';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 import {ContactForm} from './ContactForm/ContactForm';
 import {Filter} from './Filter/Filter';
@@ -108,7 +108,7 @@ export const App = () => {
         <ContactList />
       </div>
 
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   )
   
