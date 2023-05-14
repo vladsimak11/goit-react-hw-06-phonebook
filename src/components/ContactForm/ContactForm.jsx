@@ -1,19 +1,47 @@
 import css from './ContactForm.module.css';
-import {addContact} from '../../redux/actions';
+import { addContact } from '../../redux/contactsSlice';
+import {getContacts} from '../../redux/selectors';
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from 'react-toastify';
 
-import { useDispatch } from "react-redux";
+const contactsName = [];
 
 export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
-  
+
   const handleSubmit = event => {
     event.preventDefault();
+    
+    contacts.forEach(contact => {
+      contactsName.push(contact.name);
+    });
 
     const form = event.target;
-    const name = form.elements.name.value;
-    const number = form.elements.number.value;
-    dispatch(addContact(name, number))
-  
+
+    const contactsValue = {
+      name: form.elements.name.value,
+      number: form.elements.number.value,
+    }
+
+    if(contactsName.includes(contactsValue.name)) {
+
+      toast.warn(`${contactsValue.name} is already in contacts`, {
+        position: "top-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+
+      return;
+    } else (
+      dispatch(addContact(contactsValue))
+    )
+
     form.reset();
   };
 
