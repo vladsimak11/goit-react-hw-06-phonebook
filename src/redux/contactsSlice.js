@@ -1,6 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"; 
 import { toast } from 'react-toastify';
-
 // Add and delete contacts
 
 const contactsInitialState = [
@@ -12,8 +11,9 @@ const contactsSlice = createSlice({
   name: "contacts",
   initialState: contactsInitialState,
   reducers: {
-    addContact(state, action) {
-      state.unshift(action.payload);
+    addContact: {
+      reducer(state, action) {
+        state.unshift(action.payload);
 
       toast.success('Add contact', {
         position: "top-center",
@@ -25,19 +25,20 @@ const contactsSlice = createSlice({
         progress: undefined,
         theme: "light",
       });
-
       
-      console.log(action.payload.id);
+      },
+
+      prepare({name, number}) { 
+        return {
+          payload: {
+            id: nanoid(), 
+            name,
+            number,
+          },
+        };
+      }
     },
-    prepare({name, number}) { 
-      return {
-        payload: {
-          id: nanoid(),
-          name,
-          number, 
-        },
-      };
-    },
+
     deleteContact(state, action) {
       const index = state.findIndex(contact => contact.id === action.payload);
       state.splice(index, 1);
