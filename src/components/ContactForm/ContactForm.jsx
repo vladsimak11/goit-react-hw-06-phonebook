@@ -4,18 +4,16 @@ import {getContacts} from '../../redux/selectors';
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 
-const contactsName = [];
-
 export const ContactForm = () => {
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
+  const contactsNameCheck = name => {
+    return contacts.filter(contact => contact.name.includes(name));
+  };
+
   const handleSubmit = event => {
     event.preventDefault();
-    
-    contacts.forEach(contact => {
-      contactsName.push(contact.name);
-    });
 
     const form = event.target;
 
@@ -24,8 +22,12 @@ export const ContactForm = () => {
       number: form.elements.number.value,
     }
 
-    if(contactsName.includes(contactsValue.name)) {
+    const check = contactsNameCheck(contactsValue.name);
 
+    if (check.length <= 0) {
+      dispatch(addContact(contactsValue));
+    } else (
+      
       toast.warn(`${contactsValue.name} is already in contacts`, {
         position: "top-center",
         autoClose: 2500,
@@ -35,13 +37,9 @@ export const ContactForm = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        });
-
-      return;
-    } else (
-      dispatch(addContact(contactsValue))
+      })
     )
-
+    
     form.reset();
   };
 
